@@ -11,9 +11,9 @@ public class Customer {
     private int id;
     private String namesurname;
     private String birthdate;
-    private String credit;
+    private double credit;
 
-    public Customer(int id,String namesurname,String birthdate,String credit){
+    public Customer(int id,String namesurname,String birthdate,Double credit){
         this.id = id;
         this.namesurname = namesurname;
         this.birthdate=birthdate;
@@ -21,7 +21,7 @@ public class Customer {
 
     }
 
-    public Customer(String namesurname,String birthdate,String credit){
+    public Customer(String namesurname,String birthdate,Double credit){
         this.namesurname = namesurname;
         this.birthdate = birthdate;
         this.credit = credit;
@@ -51,11 +51,11 @@ public class Customer {
         this.birthdate = birthdate;
     }
 
-    public String getCredit() {
+    public Double getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
+    public void setCredit(Double credit) {
         this.credit = credit;
     }
 }

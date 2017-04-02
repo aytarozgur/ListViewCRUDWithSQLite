@@ -1,9 +1,13 @@
 package com.example.canbay.bim494_homework2;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,18 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import Model.Customer;
-
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     ListViewAdapter adapter;
     EditText namesurname,birthdate,credit;
     Button btnUpdate,btnCancel;
+    String daystring,monthstring,yearstring;
+    int count = 0;
 
 
     @Override
@@ -65,15 +70,49 @@ public class MainActivity extends AppCompatActivity {
                 credit = (EditText) dialog.findViewById(R.id.etCredit);
                 namesurname.setText(currentCustomer.getNamesurname());
                 birthdate.setText(currentCustomer.getBirthdate());
-                credit.setText(currentCustomer.getCredit());
+                daystring = currentCustomer.getBirthdate().substring(0,2);
+                monthstring = currentCustomer.getBirthdate().substring(3,5);
+                yearstring = currentCustomer.getBirthdate().substring(6,10);
+
+
+
+                birthdate.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View v) {
+                        DatePickerDialog datePickerDialog;
+                        int day = Integer.parseInt(daystring);
+                        int month = Integer.parseInt(monthstring)-1 ;
+                        int year = Integer.parseInt(yearstring);
+                        datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                if(month<9 && dayOfMonth<10){
+                                    birthdate.setText("0"+ dayOfMonth + "/" +"0" + (month+1) + "/" + year);
+                                }
+                                else{
+                                    birthdate.setText(dayOfMonth + "/" + (month+1) + "/" + year);
+                                }
+                            }
+                        },year,month,day);
+                        datePickerDialog.setTitle("Tarih Seçiniz");
+                        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Ayarla", datePickerDialog);
+                        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "İptal", datePickerDialog);
+
+                        datePickerDialog.show();
+
+                    }
+                });
+
+                credit.setText(String.valueOf(currentCustomer.getCredit()));
                 btnUpdate = (Button) dialog.findViewById(R.id.btnUpdate);
                 btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
                 btnUpdate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        database.updateCustomer(currentCustomer.getId(),namesurname.getText().toString(),(birthdate.getText().toString()),(credit.getText().toString()));
+                        database.updateCustomer(currentCustomer.getId(),namesurname.getText().toString(),(birthdate.getText().toString()),Double.parseDouble(credit.getText().toString()));
                         int idx=  customers.indexOf(currentCustomer);
-                        customers.set(idx,new Customer(currentCustomer.getId(),namesurname.getText().toString(),(birthdate.getText().toString()),(credit.getText().toString())));
+                        customers.set(idx,new Customer(currentCustomer.getId(),namesurname.getText().toString(),(birthdate.getText().toString()),Double.parseDouble(credit.getText().toString())));
                         adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
@@ -85,10 +124,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
                 dialog.show();
 
             }
         });
+
+
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -148,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 String birthdatefromdb = cursor.getString(2);
                 String creditfromdb = cursor.getString(3);
                 try {
-                    customers.add(new Customer(Integer.parseInt(idfromdb), namesurnamefromdb, birthdatefromdb, (creditfromdb)));
+                    customers.add(new Customer(Integer.parseInt(idfromdb), namesurnamefromdb, birthdatefromdb, Double.parseDouble(creditfromdb)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

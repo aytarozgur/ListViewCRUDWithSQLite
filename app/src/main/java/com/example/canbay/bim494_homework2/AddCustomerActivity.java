@@ -51,7 +51,7 @@ public class AddCustomerActivity extends AppCompatActivity {
 
                try {
 
-                   database.insertCustomer(namesurname.getText().toString(),(birthdate.getText().toString()),(credit.getText().toString()));
+                   database.insertCustomer(namesurname.getText().toString(),(birthdate.getText().toString()),Double.parseDouble(credit.getText().toString()));
                } catch (Exception e) {
                    e.printStackTrace();
                }
@@ -73,8 +73,8 @@ public class AddCustomerActivity extends AppCompatActivity {
                  datePickerDialog = new DatePickerDialog(AddCustomerActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        if(month<9){
-                            birthdate.setText(dayOfMonth + "/" +"0" + (month+1) + "/" + year);
+                        if(month<9 && dayOfMonth<10){
+                            birthdate.setText("0"+ dayOfMonth + "/" +"0" + (month+1) + "/" + year);
                         }
                         else{
                         birthdate.setText(dayOfMonth + "/" + (month+1) + "/" + year);

@@ -24,14 +24,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public DBHelper(Context context){
-        super(context,DATABASE_NAME,null,14);
+        super(context,DATABASE_NAME,null,18);
 
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         String createTable = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                " NAMESURNAME TEXT , BIRTHDATE TEXT, CREDIT TEXT)";
+                " NAMESURNAME TEXT , BIRTHDATE TEXT, CREDIT FLOAT)";
 
         db.execSQL(createTable);
 
@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertCustomer(String namesurname,String birthdate,String credit){
+    public boolean insertCustomer(String namesurname,String birthdate,Double credit){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return res.getCount();
     }
 
-    public boolean updateCustomer(int id,String namesurname,String birthdate,String credit){
+    public boolean updateCustomer(int id,String namesurname,String birthdate,Double credit){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN1,namesurname);

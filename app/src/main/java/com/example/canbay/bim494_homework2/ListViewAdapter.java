@@ -62,7 +62,7 @@ public class ListViewAdapter extends BaseAdapter {
         count.setText(String.valueOf(customer.getId()));
         namesurname.setText(customer.getNamesurname());
         birthdate.setText(customer.getBirthdate().toString());
-        credit.setText((customer.getCredit()));
+        credit.setText((customer.getCredit().toString()));
         return rowView;
     }
 }
